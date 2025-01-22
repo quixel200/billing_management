@@ -1,21 +1,22 @@
 <?php include '../master/menu.php'?>
 <html lang="en">
 <head>
-    <title>Suppiler</title>
+    <title>Shop</title>
 </head>
 <body class="container">
     <div class="">
         <div class="container">
             <div class="text-center mt-3">
-                <h3>Suppiler</h3>
+                <h3>Shop</h3>
             </div>
             <div class="table-responsive mt-3">
-                <table class="table table-hover border">
+                <table class="table table-hover border" >
                     <thead class="table-light">
                         <tr>
-                            <th scope="col">Name</th>
+                            <th scope="col">Manager</th>
                             <th scope="col">Address</th>
                             <th scope="col">Contact</th>
+                            <th scope="col">Email</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,8 +37,10 @@
                         <form method="post" action="">
                             <div class="modal-body">
                                 <div>
-                                    <b><label class="form-label">Suppiler Name:</label></b>
-                                    <input type="text" class="form-control" name="suppiler" placeholder="Enter Suppiler Name" required>
+                                    <b><label class="form-label">Manager Name:</label></b>
+                                    <select class="form-select">
+                                        <option selected value="">Select Manager</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <b><label class="form-label mt-3">Address:</label></b>
@@ -46,6 +49,10 @@
                                 <div>
                                     <b><label class="form-label mt-3">Contact:</label></b>
                                     <input type="text" class="form-control" name="contact" placeholder="Enter Contact" required>
+                                </div>
+                                <div>
+                                    <b><label class="form-label mt-3">Email:</label></b>
+                                    <input type="text" class="form-control" name="email" placeholder="Enter Contact" required>
                                 </div>
                                 <div class="d-grid mt-3">
                                 <button type="button" class="btn btn-success">Submit</button>
@@ -57,5 +64,4 @@
                 </div>
             </div>
     </div>
-    
 </body>
