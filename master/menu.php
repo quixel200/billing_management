@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Menu</title>
+    <title>Menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -32,7 +32,7 @@
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item py-2 px-3" href="#">New Product</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="#">Manager</a></li>
-                                <li><a class="dropdown-item py-2 px-3" href="../database_management/suppiler.php">Suppiler</a></li>
+                                <li><a class="dropdown-item py-2 px-3" href="../database_management/supplier.php">Supplier</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="../database_management/shop.php">Shop</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="../database_management/warehouse.php">Warehouse</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="#">Users</a></li>
