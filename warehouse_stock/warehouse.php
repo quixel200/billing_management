@@ -1,32 +1,6 @@
 <?php
-include '../master/config.php';
-
-// Fetch products from the database
-$query = "SELECT 
-    p.warehouse_id,
-    p.category_id,
-    c.name AS category_name, 
-    w.name AS warehouse_name, 
-    p.product_id, 
-    p.name AS product_name, 
-    p.quantity, 
-    p.price 
-FROM 
-    products p 
-JOIN 
-    warehouse w ON w.warehouse_id = p.warehouse_id 
-JOIN 
-    category c ON c.category_id = p.category_id;
-";
-$result = mysqli_query($connection, $query);
-
-if (!$result) {
-    die("Database query failed: " . mysqli_error($connection));
-}
+include 'warehouse_backend.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -35,7 +9,15 @@ if (!$result) {
     <!-- Include Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/warehouse.js" defer></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- jQuery (required by DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
@@ -46,7 +28,9 @@ if (!$result) {
 
         <!-- Product List -->
         <section class="product-list">
-            <button class="btn btn-success mb-3" onclick="showAddForm()">Add New Product</button>
+            <button class="btn btn-success mb-3 float-end" onclick="showAddForm()">Add New Product</button>
+
+
 
             <!-- Modal: Add New Product -->
             <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
@@ -75,13 +59,31 @@ if (!$result) {
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="warehouseId" class="form-label">Warehouse ID</label>
-                                    <input type="number" id="warehouseId" class="form-control" required>
+                                    <label for="warehouseId" class="form-label">Warehouse</label>
+                                    <select id="warehouseId" class="form-control" required>
+                                        <option value="">Select Warehouse</option>
+                                        <?php
+                                        foreach ($categories as $category) {
+                                            $id = htmlspecialchars($category['id'], ENT_QUOTES, 'UTF-8');
+                                            $name = htmlspecialchars($category['category_name'], ENT_QUOTES, 'UTF-8');
+                                            echo "<option value='{$id}'>{$id} - {$name}</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="categoryId" class="form-label">Category ID</label>
-                                    <input type="number" id="categoryId" class="form-control" required>
+                                    <label for="categoryId" class="form-label">Category</label>
+                                    <select id="categoryId" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <?php
+                                        foreach ($warehouses as $warehouse) {
+                                            $id = htmlspecialchars($warehouse['id'], ENT_QUOTES, 'UTF-8');
+                                            $name = htmlspecialchars($warehouse['warehouse_name'], ENT_QUOTES, 'UTF-8');
+                                            echo "<option value='{$id}'>{$id} - {$name}</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </form>
                         </div>
@@ -94,15 +96,16 @@ if (!$result) {
             </div>
 
 
+
             <table class="table table-bordered table-striped" id="productTable">
                 <thead>
                     <tr>
-                        <th>Product ID</th>
+                        <th>Category ID - Name</th>
                         <th>Name</th>
+                        <th>Product ID</th>
                         <th>Stock Quantity</th>
                         <th>Price per sq.ft</th>
                         <th>Warehouse ID - Name</th>
-                        <th>Category ID - Name[</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -110,14 +113,14 @@ if (!$result) {
                     <?php
                     while ($product = mysqli_fetch_assoc($result)) {
                         echo "<tr data-id='" . $product['product_id'] . "'>";
-                        echo "<td>" . $product['product_id'] . "</td>";
+                        echo "<td>" . $product['warehouse_id'] . " - " . $product['category_name'] . "</td>";
                         echo "<td>" . $product['product_name'] . "</td>";
+                        echo "<td>" . $product['product_id'] . "</td>";
                         echo "<td>" . $product['quantity'] . "</td>";
                         echo "<td>" . $product['price'] . "</td>";
                         echo "<td>" . $product['warehouse_id'] . " - " . $product['warehouse_name'] . "</td>";
-                        echo "<td>" . $product['warehouse_id'] . " - " . $product['category_name'] . "</td>";
                         echo "<td><button class='btn btn-warning' onclick='openEditModal(" . $product['product_id'] . ")'>Update</button>
-                                      <button class='btn btn-danger' onclick='deleteProduct(" . $product['product_id'] . ")'>Delete</button></td>";
+                              <button class='btn btn-danger' onclick='deleteProduct(" . $product['product_id'] . ")'>Delete</button></td>";
                         echo "</tr>";
                     }
                     ?>
@@ -160,6 +163,18 @@ if (!$result) {
     </div>
 
     <script>
+
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10
+            });
+        });
+
         // Open edit modal and populate fields
         function openEditModal(productId) {
             var modal = new bootstrap.Modal(document.getElementById('editModal'));
