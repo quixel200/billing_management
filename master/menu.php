@@ -31,11 +31,12 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item py-2 px-3" href="#">New Product</a></li>
+                                <li><a class="dropdown-item py-2 px-3" href="#">Manager</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="../database_management/suppiler.php">Suppiler</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="../database_management/shop.php">Shop</a></li>
-                                <li><a class="dropdown-item py-2 px-3" href="#">Warehouse</a></li>
+                                <li><a class="dropdown-item py-2 px-3" href="../database_management/warehouse.php">Warehouse</a></li>
                                 <li><a class="dropdown-item py-2 px-3" href="#">Users</a></li>
-                                <li><a class="dropdown-item py-2 px-3" href="#">Customer</a></li>
+                                <li><a class="dropdown-item py-2 px-3" href="../database_management/customer.php">Customer</a></li>
                             </ul>
                         </li>
                     </ul>
