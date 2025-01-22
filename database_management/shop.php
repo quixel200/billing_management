@@ -1,4 +1,34 @@
 <?php include '../master/menu.php';
+include '../master/config.php';
+
+$manager_details = '';
+
+$manager_query = 'select * from users where role!="manager"';
+$queryEXE = mysqli_query($connection,$manager_query);
+while($row = mysqli_fetch_array($queryEXE)){
+    $manager_details.='<option value="'.$row['uid'].'">'.$row['name'].'</option>';
+}
+
+if(isset($_POST['submit'])){
+    $manager_id = $_POST['manager_id'];
+    $address = $_POST['address'];
+    $contact = $_POST['contact'];
+    $email = $_POST['email'];
+    $stmt = $connection->prepare('insert into shop(manager_id,address,contact,email) values(?,?,?,?)');
+    $stmt->bind_param("ssss",$manager_id,$address,$contact,$email);
+    $stmt->execute();
+}
+
+$shop_details = '';
+$shop_query = 'select u.name,s.address,s.contact,s.email from shop s join users u on u.uid=s.manager_id';
+$queryEXE1 = mysqli_query($connection,$shop_query);
+while($row = mysqli_fetch_array($queryEXE1)){
+    $shop_details.='<tr><td>'.$row['name'].'</td>';
+    $shop_details.='<td>'.$row['address'].'</td>';
+    $shop_details.='<td>'.$row['contact'].'</td>';
+    $shop_details.='<td>'.$row['email'].'</td></tr>';
+}
+
 ?>
 
 <html lang="en">
@@ -22,6 +52,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php echo $shop_details; ?>
                     </tbody>
                 </table>
             </div>
@@ -40,8 +71,9 @@
                             <div class="modal-body">
                                 <div>
                                     <b><label class="form-label">Manager Name:</label></b>
-                                    <select class="form-select" name="">
+                                    <select class="form-select" name="manager_id">
                                         <option selected value="">Select Manager</option>
+                                        <?php echo $manager_details; ?>
                                     </select>
                                 </div>
                                 <div>
@@ -57,7 +89,7 @@
                                     <input type="text" class="form-control" name="email" placeholder="Enter Contact" required>
                                 </div>
                                 <div class="d-grid mt-3">
-                                <button type="button" class="btn btn-success">Submit</button>
+                                <button type="submit" class="btn btn-success" name="submit">Submit</button>
                                 </div>
                             </div>
                         </form>

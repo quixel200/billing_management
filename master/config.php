@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 // Configuration for database connection
 $host = "localhost"; 
 $dbname = "billing_management";
