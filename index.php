@@ -16,7 +16,7 @@ include 'master/config.php';
             <div class="card-body">
                 <form action="master/login.php" method="post">
                     <div>
-                        <b><label class="form-label mt-3">Username:</label></b>
+                        <b><label class="form-label mt-3">Employee code:</label></b>
                         <input type="text" name="username" placeholder="Username" class="form-control mt-3" reqired>
                     </div>
                     <div>

@@ -1,4 +1,6 @@
-<?php include '../master/menu.php'?>
+<?php include '../master/menu.php';
+?>
+
 <html lang="en">
 <head>
     <title>Shop</title>
@@ -34,11 +36,11 @@
                         <h1 class="modal-title fs-5" id="add_shopLabel">Add Shop</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post" action="">
+                        <form method="post" action="shop.php">
                             <div class="modal-body">
                                 <div>
                                     <b><label class="form-label">Manager Name:</label></b>
-                                    <select class="form-select">
+                                    <select class="form-select" name="">
                                         <option selected value="">Select Manager</option>
                                     </select>
                                 </div>
