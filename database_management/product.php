@@ -26,7 +26,18 @@ $product_table = '';
 
 $queryEXE = mysqli_query($connection,$category_query);
 while($row = mysqli_fetch_array($queryEXE)){
-    $category_table.='<tr><td>'.$row['name'].'</td></tr>';
+    $category_table.='<tr><td>'.$row['name'].'</td>';
+    $category_table.= "<td>
+            <form method='post' action=''>
+                <button class='btn btn-outline-primary' name='edit' type='submit'>
+                    <i class='bi bi-pencil-square'></i>
+                </button>
+                <button class='btn btn-outline-danger' name='delete' type='submit'>
+                    <i class='bi bi-trash'></i>
+                </button>
+            </form>
+        </td>";
+    $category_table.= "</tr>";
     $category_dropdown.='<option value="'.$row['category_id'].'">'.$row['name'].'</option>';
 }
 $queryEXE1 = mysqli_query($connection,$product_query);
@@ -35,6 +46,17 @@ while($row = mysqli_fetch_array($queryEXE1)){
     $product_table.='<td>'.$row['color'].'</td>';
     $product_table.='<td>'.$row['size'].'</td>';
     $product_table.='<td>'.$row['product_name'].'</td></tr>';
+    $product_table.= "<td>
+            <form method='post' action=''>
+                <button class='btn btn-outline-primary' name='edit' type='submit'>
+                    <i class='bi bi-pencil-square'></i>
+                </button>
+                <button class='btn btn-outline-danger' name='delete' type='submit'>
+                    <i class='bi bi-trash'></i>
+                </button>
+            </form>
+        </td>";
+    $product_table.= "</tr>";
 }
 
 ?>
@@ -53,6 +75,7 @@ while($row = mysqli_fetch_array($queryEXE1)){
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Category Name</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,6 +122,7 @@ while($row = mysqli_fetch_array($queryEXE1)){
                             <th scope="col">Color</th>
                             <th scope="col">Size</th>
                             <th scope="col">Product Category</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>

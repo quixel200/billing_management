@@ -17,8 +17,19 @@ $queryEXE = mysqli_query($connection,$supplier_query);
 while($row = mysqli_fetch_array($queryEXE)){
     $supplier_details.="<tr><td>".$row['name']."</td>";
     $supplier_details.="<td>".$row['address']."</td>";
-    $supplier_details.="<td>".$row['contact']."</td></tr>";
-}
+    $supplier_details.="<td>".$row['contact']."</td>";
+    $supplier_details.= "<td>
+            <form method='post' action=''>
+                <button class='btn btn-outline-primary' name='edit' type='submit'>
+                    <i class='bi bi-pencil-square'></i>
+                </button>
+                <button class='btn btn-outline-danger' name='delete' type='submit'>
+                    <i class='bi bi-trash'></i>
+                </button>
+            </form>
+        </td>";
+    $supplier_details.= "</tr>";
+    }
 
 
 ?>
@@ -40,6 +51,7 @@ while($row = mysqli_fetch_array($queryEXE)){
                             <th scope="col">Name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Contact</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
