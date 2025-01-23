@@ -1,4 +1,36 @@
-<?php include '../master/menu.php'?>
+<?php include '../master/menu.php';
+include '../master/config.php';
+$warehouse_details = '';
+$shop_details = '';
+
+$shop_query = 'select shop_id,address from shop';
+$queryEXE1 = mysqli_query($connection,$shop_query);
+while($row = mysqli_fetch_array($queryEXE1)){
+    $shop_details.='<option value="'.$row['shop_id'].'">'.$row['address'].'</option>';
+}
+
+if(isset($_POST['submit'])){
+    $name = $_POST['name'];
+    $shop_id = $_POST['shop_id'];
+    $address = $_POST['address'];
+    $contact = $_POST['contact'];
+    $stmt = $connection->prepare('insert into warehouse(shop_id,name,address,contact) values (?,?,?,?)');
+    $stmt->bind_param("ssss",$shop_id,$name,$address,$contact);
+    $stmt->execute();
+}
+
+
+$warehouse_query = 'select s.address as shop_address,w.name,w.address as warehouse_address,w.contact from warehouse w join shop s on s.shop_id=w.shop_id';
+$queryEXE = mysqli_query($connection,$warehouse_query);
+while($row = mysqli_fetch_array($queryEXE)){
+    $warehouse_details.='<tr><td>'.$row['name'].'</td>';
+    $warehouse_details.='<td>'.$row['shop_address'].'</td>';
+    $warehouse_details.='<td>'.$row['warehouse_address'].'</td>';
+    $warehouse_details.='<td>'.$row['contact'].'</td></tr>';
+}
+
+
+?>
 <html lang="en">
 <head>
     <title>Warehouse</title>
@@ -20,6 +52,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php echo $warehouse_details; ?>
                     </tbody>
                 </table>
             </div>
@@ -42,8 +75,9 @@
                                 </div>
                                 <div>
                                     <b><label class="form-label mt-3">Shop Name:</label></b>
-                                    <select class="form-select">
+                                    <select class="form-select" name="shop_id">
                                         <option selected value="">Select Shop</option>
+                                        <?php echo $shop_details; ?>
                                     </select>
                                 </div>
                                 <div>
@@ -55,7 +89,7 @@
                                     <input type="text" class="form-control" name="contact" placeholder="Enter Contact" required>
                                 </div>
                                 <div class="d-grid mt-3">
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" name="submit" class="btn btn-success">Submit</button>
                                 </div>
                             </div>
                         </form>

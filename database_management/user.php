@@ -1,4 +1,35 @@
 <?php include '../master/menu.php';
+include '../master/config.php';
+
+$shop_details = '';
+$shop_query = 'select shop_id,address from shop';
+$queryEXE1 = mysqli_query($connection,$shop_query);
+while($row = mysqli_fetch_array($queryEXE1)){
+    $shop_details.='<option value="'.$row['shop_id'].'">'.$row['address'].'</option>';
+}
+
+if(isset($_POST['submit'])){
+    $name = $_POST['name'];
+    $employee_code = $_POST['employee_code'];
+    $shop_id = $_POST['shop_id'];
+    $role = $_POST['role'];
+    $phone_number = $_POST['phone_number'];
+    $stmt = $connection->prepare('insert into users(name,employee_code,password,shop_id,role,phone_number) values (?,?,PASSWORD("defaultpassword"),?,?,?)');
+    $stmt->bind_param("sssss",$name,$employee_code,$shop_id,$role,$phone_number);
+    $stmt->execute();
+}
+
+$users_table = '';
+$user_query = 'select u.name,u.employee_code,s.address,u.role,u.phone_number from users u join shop s on s.shop_id=u.shop_id';
+$queryEXE2 = mysqli_query($connection,$user_query);
+while($row = mysqli_fetch_array($queryEXE2)){
+    $users_table.='<tr><td>'.$row['name'].'</td>';
+    $users_table.='<td>'.$row['employee_code'].'</td>';
+    $users_table.='<td>'.$row['address'].'</td>';
+    $users_table.='<td>'.$row['role'].'</td>';
+    $users_table.='<td>'.$row['phone_number'].'</td></tr>';
+}
+
 ?>
 
 <html lang="en">
@@ -32,6 +63,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php echo $users_table; ?>
                     </tbody>
                 </table>
             </div>
@@ -46,7 +78,7 @@
                         <h1 class="modal-title fs-5" id="add_userLabel">Add Shop</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post" action="">
+                        <form method="post" action="user.php">
                             <div class="modal-body">
                                 <div>
                                     <b><label class="form-label">Employee Name:</label></b>
@@ -54,12 +86,13 @@
                                 </div>
                                 <div>
                                     <b><label class="form-label mt-3">Employee Code:</label></b>
-                                    <input type="text" class="form-control" name="emp_code" placeholder="Enter Employee Code" required>
+                                    <input type="text" class="form-control" name="employee_code" placeholder="Enter Employee Code" required>
                                 </div>
                                 <div>
                                     <b><label class="form-label mt-3">Shop:</label></b>
-                                    <select class="form-select">
+                                    <select class="form-select" name="shop_id">
                                         <option selected value="">Select Shop</option>
+                                        <?php echo $shop_details; ?>
                                     </select>
                                 </div>
                                 <div>
@@ -68,10 +101,10 @@
                                 </div>
                                 <div>
                                     <b><label class="form-label mt-3">Phone Number:</label></b>
-                                    <input type="text" class="form-control" name="mob_no" placeholder="Enter Phone Number" required>
+                                    <input type="text" class="form-control" name="phone_number" placeholder="Enter Phone Number" required>
                                 </div>
                                 <div class="d-grid mt-3">
-                                <button type="button" class="btn btn-success">Submit</button>
+                                <button type="submit" name="submit" class="btn btn-success">Submit</button>
                                 </div>
                             </div>
                         </form>
