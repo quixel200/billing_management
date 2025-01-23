@@ -27,7 +27,18 @@ while($row = mysqli_fetch_array($queryEXE2)){
     $users_table.='<td>'.$row['employee_code'].'</td>';
     $users_table.='<td>'.$row['address'].'</td>';
     $users_table.='<td>'.$row['role'].'</td>';
-    $users_table.='<td>'.$row['phone_number'].'</td></tr>';
+    $users_table.='<td>'.$row['phone_number'].'</td>';
+    $users_table.= "<td>
+            <form method='post' action=''>
+                <button class='btn btn-outline-primary' name='edit' type='submit'>
+                    <i class='bi bi-pencil-square'></i>
+                </button>
+                <button class='btn btn-outline-danger' name='delete' type='submit'>
+                    <i class='bi bi-trash'></i>
+                </button>
+            </form>
+        </td>";
+    $users_table.= "</tr>";
 }
 
 ?>
@@ -60,6 +71,7 @@ while($row = mysqli_fetch_array($queryEXE2)){
                             <th scope="col">Shop</th>
                             <th scope="col">Role</th>
                             <th scope="col">Phone Number</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>

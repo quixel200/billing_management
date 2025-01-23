@@ -26,7 +26,18 @@ while($row = mysqli_fetch_array($queryEXE)){
     $warehouse_details.='<tr><td>'.$row['name'].'</td>';
     $warehouse_details.='<td>'.$row['shop_address'].'</td>';
     $warehouse_details.='<td>'.$row['warehouse_address'].'</td>';
-    $warehouse_details.='<td>'.$row['contact'].'</td></tr>';
+    $warehouse_details.='<td>'.$row['contact'].'</td>';
+    $warehouse_details.= "<td>
+            <form method='post' action=''>
+                <button class='btn btn-outline-primary' name='edit' type='submit'>
+                    <i class='bi bi-pencil-square'></i>
+                </button>
+                <button class='btn btn-outline-danger' name='delete' type='submit'>
+                    <i class='bi bi-trash'></i>
+                </button>
+            </form>
+        </td>";
+    $warehouse_details.= "</tr>";
 }
 
 
@@ -49,6 +60,7 @@ while($row = mysqli_fetch_array($queryEXE)){
                             <th scope="col">Shop Name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Contact</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
