@@ -1,0 +1,239 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+    padding: 15px;
+}
+
+.table tbody tr:last-child {
+    font-weight: bold;
+}
+
+.suggestion-box {
+    position: relative;
+}
+
+.suggestions {
+    position: absolute;
+    background: white;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 100%;
+}
+
+.suggestions div {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestions div:hover {
+    background: #f8f9fa;
+}
+
+.amount-box {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+.quantity,
+.price {
+    text-align: right;
+    transition: width 0.3s ease;
+}
+
+input.form-control,
+textarea.form-control {
+
+    box-shadow: none;
+}
+
+textarea {
+    resize: none;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border: 1px solid #007bff;
+}
+
+.customer-details {
+    margin: 15px 0;
+    width: 100%;
+}
+
+.detail-line {
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.detail-label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.detail-input {
+    margin-left: 0px;
+    box-sizing: border-box;
+}
+
+textarea.detail-input {
+    overflow: hidden;
+    resize: none;
+    min-height: 38px;
+    width: calc(100% - 90px);
+    padding: 8px;
+    line-height: 1.5;
+    transition: height 0.1s ease;
+}
+
+/* Ensure proper textarea behavior in table */
+.table textarea.form-control {
+    min-height: 38px;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    transition: height 0.1s ease;
+}
+
+
+/* Print Styles */
+@media print {
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+
+    body {
+        background-color: white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+    }
+
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* Hide action column and related elements */
+    .table th:last-child,
+    .table td:last-child,
+    .suggestions,
+    #addRow,
+    .remove-row,
+    #downloadBill,
+    #printBill {
+        display: none !important;
+    }
+
+    /* Adjust table layout after hiding action column */
+    .table th:nth-child(1) {
+        width: 50% !important;
+    }
+
+    .table th:nth-child(2) {
+        width: 15% !important;
+    }
+
+    .table th:nth-child(3) {
+        width: 15% !important;
+    }
+
+    .table th:nth-child(4) {
+        width: 20% !important;
+    }
+
+    .form-control {
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+
+    input.form-control,
+    textarea.form-control {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+    }
+
+    .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #dee2e6 !important;
+        padding: 0.5rem !important;
+        background-color: transparent !important;
+    }
+
+    .amount-box {
+        border: 1px solid #dee2e6 !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* Ensure important content starts on a new page if needed */
+    .card-body {
+        page-break-inside: avoid !important;
+    }
+
+    /* Improve header visibility */
+    h2,
+    h4 {
+        margin: 10px 0 !important;
+        color: black !important;
+    }
+
+    /* Remove unnecessary spacing */
+    .form-section {
+        padding: 10px 0 !important;
+    }
+
+    /* Force show background colors */
+    .amount-box {
+        background-color: #f8f9fa !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Ensure proper text contrast */
+    * {
+        color: black !important;
+    }
+
+    .detail-line {
+        margin-bottom: 5px !important;
+    }
+
+    .detail-label {
+        color: black !important;
+        font-weight: 500 !important;
+    }
+
+    #currentDate {
+        border: none !important;
+        background: transparent !important;
+    }
+}
