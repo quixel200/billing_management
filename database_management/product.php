@@ -45,7 +45,7 @@ while($row = mysqli_fetch_array($queryEXE1)){
     $product_table.='<tr><td>'.$row['type_name'].'</td>';
     $product_table.='<td>'.$row['color'].'</td>';
     $product_table.='<td>'.$row['size'].'</td>';
-    $product_table.='<td>'.$row['product_name'].'</td></tr>';
+    $product_table.='<td>'.$row['product_name'].'</td>';
     $product_table.= "<td>
             <form method='post' action=''>
                 <button class='btn btn-outline-primary' name='edit' type='submit'>
