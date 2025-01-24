@@ -10,7 +10,6 @@
     <link href="billing.css" rel="stylesheet">
 
 </head>
-
 <body>
     <div class="container">
         <div class="card">

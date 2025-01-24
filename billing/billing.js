@@ -47,19 +47,6 @@ $(document).on("input", ".quantity, .price", function () {
   calculateTotal();
 });
 
-$("#addRow").click(function () {
-  const newRow = `<tr>
-    <td class="suggestion-box">
-        <textarea class="form-control item-search" placeholder="Search product" rows="1" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"></textarea>
-        <div class="suggestions"></div>
-    </td>
-    <td><input type="number" class="form-control quantity" oninput="resizeInput(this); adjustColumnWidth(this)"></td>
-    <td><input type="number" class="form-control price" oninput="resizeInput(this); adjustColumnWidth(this)"></td>
-    <td class="amount">0.00</td>
-    <td><button class="btn btn-danger btn-sm remove-row">Remove</button></td>
-</tr>`;
-  $("#billingTable").append(newRow);
-});
 
 $(document).on("click", ".remove-row", function () {
   $(this).closest("tr").remove();
@@ -90,14 +77,15 @@ $(document).on("input", ".item-search", function () {
           suggestionsBox.empty();
           response.forEach(function (product) {
             suggestionsBox.append(
-              `<div data-price="${product.price}" class="suggestion-item">${product.name}</div>`
+              `<div data-price="${product.price}" data-product-id="${product.product_id}" class="suggestion-item">${product.name}</div>`
             );
-          });
+          });          
         } else {
           console.error("Expected an array but got:", response);
           suggestionsBox.empty();
           suggestionsBox.append("<div>No products found</div>");
         }
+        
       },
       error: function (err) {
         console.error("Error occurred", err);
@@ -115,13 +103,19 @@ $(document).on("input", ".item-search", function () {
 $(document).on("click", ".suggestion-item", function () {
   const item = $(this).text();
   const price = $(this).data("price");
-  const input = $(this).closest(".suggestion-box").find(".item-search");
+  const productId = $(this).data("product-id"); // Correct attribute name
+  const suggestionBox = $(this).closest(".suggestion-box"); // Find the suggestion-box container
+  const input = suggestionBox.find(".item-search"); // Find the textarea inside suggestion-box
 
   input.val(item);
-  input.closest("tr").find(".price").val(price);
-  input.siblings(".suggestions").empty();
+  input.closest("tr").find(".price").val(price); // Set price in the corresponding input field
+  suggestionBox.find(".suggestions").empty(); // Clear the suggestions box
+  suggestionBox.find(".product_id").val(productId); // Set product_id in the hidden field
+  console.log("Product ID:", productId);
   calculateTotal();
 });
+
+
 
 $("#downloadBill").click(function () {
   const billContent = document.body.innerHTML;
@@ -245,6 +239,7 @@ function loadBillDetails(invoiceId) {
                             <td><input type="number" class="form-control price" value="${detail.unit_price}"></td>
                             <td class="amount">${detail.total_price}</td>
                             <td><button class="btn btn-danger btn-sm remove-row">Remove</button></td>
+                            <input type="hidden" class="product_id" value="${detail.product_id}">
                         </tr>`;
         tableBody.append(row);
       });
@@ -263,3 +258,146 @@ $("#billSelector").on("change", function () {
 
 // Initialize on page load
 populateBillsDropdown();
+
+function addRowToDatabase(data, rowElement) {
+  $.ajax({
+    url: "database_row_add.php",
+    method: "POST",
+    data: data,
+    success: function (response) {
+      if (response.success) {
+        // Store the new item_id in the row for future updates
+        rowElement.data("item_id", response.item_id);
+        console.log("Row added successfully:", response);
+      } else {
+        console.error("Failed to add row:", response.error);
+      }
+    },
+    error: function (err) {
+      console.error("Error adding row:", err);
+    },
+  });
+}
+
+// Event listener for losing focus on the item field
+$(document).on("blur", ".item-search", function () {
+  const row = $(this).closest("tr");
+  const productId = row.find(".product_id").val(); // Get product_id from hidden field
+  console.log(productId);
+  const quantity = parseFloat(row.find(".quantity").val()) || 0;
+  const unitPrice = parseFloat(row.find(".price").val()) || 0;
+  const totalPrice = quantity * unitPrice;
+  const invoiceId = $("#billSelector").val(); // Get the selected invoice ID
+
+  // Only proceed if the item name is not empty and a valid invoice ID exists
+  if (invoiceId && invoiceId !== "new") {
+    const rowData = {
+      invoice_id: invoiceId,
+      product_id: productId, // Include product_id
+      quantity: quantity,
+      unit_price: unitPrice,
+      total_price: totalPrice,
+    };
+
+    // Add the row to the database
+    addRowToDatabase(rowData, row);
+  }
+});
+
+
+
+// Function to remove a row from the database
+function removeRowFromDatabase(itemId) {
+  if (!itemId) return; // Skip if no item_id is associated
+  $.ajax({
+    url: "database_row_remove.php",
+    method: "POST",
+    data: { item_id: itemId },
+    success: function (response) {
+      if (response.success) {
+        console.log("Row removed successfully:", response);
+      } else {
+        console.error("Failed to remove row:", response.error);
+      }
+    },
+    error: function (err) {
+      console.error("Error removing row:", err);
+    },
+  });
+}
+
+$("#addRow").click(function () {
+  const invoiceId = $("#billSelector").val();
+  if (!invoiceId || invoiceId === "new") {
+    alert("Please select or create a bill first.");
+    return;
+  }
+
+  const newRow = `
+    <tr>
+      <td class="suggestion-box">
+        <textarea class="form-control item-search" placeholder="Search product" rows="1"></textarea>
+        <input type="hidden" class="product_id" value=""> <!-- Hidden product_id field -->
+        <div class="suggestions"></div>
+      </td>
+      <td><input type="number" class="form-control quantity"></td>
+      <td><input type="number" class="form-control price"></td>
+      <td class="amount">0.00</td>
+      <td><button class="btn btn-danger btn-sm remove-row">Remove</button></td
+    </tr>`;
+  $("#billingTable").append(newRow);
+});
+
+
+// Remove row event
+$(document).on("click", ".remove-row", function () {
+  const row = $(this).closest("tr");
+  const itemId = row.data("item_id"); // Fetch the associated item_id
+  removeRowFromDatabase(itemId);
+  row.remove();
+  calculateTotal();
+});
+
+
+// Function to update a row in the database
+function updateRowInDatabase(itemId, updatedData) {
+  if (!itemId) return; // Skip if no item_id is associated
+  $.ajax({
+    url: "database_row_update.php",
+    method: "POST",
+    data: {
+      item_id: itemId,
+      quantity: updatedData.quantity,
+      unit_price: updatedData.unit_price,
+      total_price: updatedData.total_price,
+    },
+    success: function (response) {
+      if (response.success) {
+        console.log("Row updated successfully:", response);
+      } else {
+        console.error("Failed to update row:", response.error);
+      }
+    },
+    error: function (err) {
+      console.error("Error updating row:", err);
+    },
+  });
+}
+
+// Event listener for changes in quantity or price
+$(document).on("input", ".quantity, .price", function () {
+  const row = $(this).closest("tr");
+  const itemId = row.data("item_id"); // Fetch the associated item_id
+  const quantity = parseFloat(row.find(".quantity").val()) || 0;
+  const unit_price = parseFloat(row.find(".price").val()) || 0;
+  const total_price = quantity * unit_price;
+
+  // Update total price in the UI
+  row.find(".amount").text(total_price.toFixed(2));
+
+  // Update database
+  updateRowInDatabase(itemId, { quantity, unit_price, total_price });
+
+  // Recalculate totals
+  calculateTotal();
+});
