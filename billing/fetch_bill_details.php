@@ -6,7 +6,7 @@ require '../master/config.php';
 if (isset($_GET['invoice_id'])) {
     $invoiceId = $_GET['invoice_id'];
 
-    $query = "SELECT id.product_id, id.quantity, id.unit_price 
+    $query = "SELECT p.product_name, id.product_id, id.quantity, id.unit_price 
               FROM invoice_details id 
               JOIN products p ON id.product_id = p.product_id
               WHERE id.invoice_id = ?";

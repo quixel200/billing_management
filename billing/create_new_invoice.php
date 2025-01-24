@@ -6,7 +6,7 @@ $customer_id = isset($_POST['customer_id']) ? $_POST['customer_id'] : null;
 $shop_id = isset($_POST['shop_id']) ? $_POST['shop_id'] : null;
 
 try {
-    $query = "INSERT INTO invoice (customer_id, shop_id, sgst, cgst, grand_total, date) 
+    $query = "INSERT INTO invoice (customer_id, shop_id, sgst, cgst, grand_total, inv_date) 
               VALUES (?, ?, 0, 0, 0, NOW())";
     $stmt = $connection->prepare($query);
     $stmt->bind_param("ii", $customer_id, $shop_id);

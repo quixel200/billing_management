@@ -216,7 +216,7 @@ function loadBillDetails(invoiceId) {
                             <td>${detail.product_name}</td>
                             <td><input type="number" class="form-control quantity" value="${detail.quantity}"></td>
                             <td><input type="number" class="form-control price" value="${detail.unit_price}"></td>
-                            <td class="amount">${detail.total_price}</td>
+                            <td class="amount">${detail.quantity * detail.unit_price}</td>
                             <td><button class="btn btn-danger btn-sm remove-row">Remove</button></td>
                             <input type="hidden" class="product_id" value="${detail.product_id}">
                         </tr>`;
@@ -255,24 +255,29 @@ function addRowToDatabase(data, rowElement) {
   });
 }
 
-$(document).on("blur", ".quantity", function () {
+$(document).on("focus", ".quantity", function () {
   const row = $(this).closest("tr");
-  const productId = row.find(".product_id").val();
-  const quantity = parseFloat(row.find(".quantity").val()) || 0;
-  const unitPrice = parseFloat(row.find(".price").val()) || 0;
-  const invoiceId = $("#billSelector").val();
 
-  if (invoiceId && invoiceId !== "new") {
-    const rowData = {
-      invoice_id: invoiceId,
-      product_id: productId,
-      quantity: quantity,
-      unit_price: unitPrice
-    };
+  if (!row.data("added")) {
+    const productId = row.find(".product_id").val();
+    const quantity = parseFloat(row.find(".quantity").val()) || 0;
+    const unitPrice = parseFloat(row.find(".price").val()) || 0;
+    const invoiceId = $("#billSelector").val();
 
-    addRowToDatabase(rowData, row);
+    if (invoiceId && invoiceId !== "new") {
+      const rowData = {
+        invoice_id: invoiceId,
+        product_id: productId,
+        quantity: quantity,
+        unit_price: unitPrice
+      };
+
+      addRowToDatabase(rowData, row);
+      row.data("added", true); 
+    }
   }
 });
+
 
 function removeRowFromDatabase(productId, invoiceId) {
   if (!productId) return;
@@ -324,13 +329,14 @@ $(document).on("click", ".remove-row", function () {
   calculateTotal();
 });
 
-function updateRowInDatabase(itemId, updatedData) {
-  if (!itemId) return;
+function updateRowInDatabase(invoiceId, productId, updatedData) {
+  if (!productId) return;
   $.ajax({
     url: "database_row_update.php",
     method: "POST",
     data: {
-      item_id: itemId,
+      invoice_id: invoiceId,
+      product_id: productId,
       quantity: updatedData.quantity,
       unit_price: updatedData.unit_price,
     },
@@ -349,11 +355,12 @@ function updateRowInDatabase(itemId, updatedData) {
 
 $(document).on("change", ".quantity, .price", function () {
   const row = $(this).closest("tr");
-  const itemId = row.find(".product_id").val();
+  const invoiceId = $("#billSelector").val();
+  const productId = row.find(".product_id").val();
   const quantity = parseFloat(row.find(".quantity").val()) || 0;
   const unit_price = parseFloat(row.find(".price").val()) || 0;
 
-  updateRowInDatabase(itemId, { quantity, unit_price});
+  updateRowInDatabase(invoiceId, productId, { quantity, unit_price});
 
   calculateTotal();
 });

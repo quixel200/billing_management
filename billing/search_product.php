@@ -4,7 +4,7 @@ include '../master/config.php';
 $query = isset($_GET['query']) ? $_GET['query'] : '';
 
 if (strlen($query) >= 1) {
-    $sql = "SELECT product_id, product_name, price FROM products WHERE name LIKE ? LIMIT 100";
+    $sql = "SELECT product_id, product_name, price FROM products WHERE product_name LIKE ? LIMIT 100";
     $stmt = $connection->prepare($sql);
     $likeQuery = "%" . $query . "%"; 
     $stmt->bind_param('s', $likeQuery); 
