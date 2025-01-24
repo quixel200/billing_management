@@ -2,7 +2,7 @@
 include '../master/config.php';
 
 $category_query = "select * from category";
-$product_query = "select t.name as type_name,t.color,t.size,c.name as product_name from type t join category c on c.category_id=t.category_id";
+$product_query = "select t.product_name as type_name,t.color,t.size,c.name as product_name from products t join category c on c.category_id=t.category_id";
 if(isset($_POST['category_submit'])){
     $name = $_POST['name'];
     $stmt = $connection->prepare("insert into category(name) values (?)");
@@ -15,7 +15,7 @@ if(isset($_POST['product_submit'])){
     $color = $_POST['color'];
     $size = $_POST['size'];
     $category_id = $_POST['category_id'];
-    $stmt = $connection->prepare("insert into type(name,color,size,category_id) values (?,?,?,?)");
+    $stmt = $connection->prepare("insert into products(product_name,color,size,category_id) values (?,?,?,?)");
     $stmt->bind_param("ssss",$name,$color,$size,$category_id);
     $stmt->execute();
 }
