@@ -24,6 +24,11 @@
                 <h4>Bill To:</h4>
                 <div class="customer-details">
                     <div class="detail-line">
+                        <span class="detail-label">Phone:</span>
+                        <input type="number" id="customerPhone" class="form-control detail-input"
+                            oninput="fetchCustomerDetails(this.value);">
+                    </div>
+                    <div class="detail-line">
                         <span class="detail-label">Name:</span>
                         <input type="text" id="customerName" class="form-control detail-input">
                     </div>
@@ -36,11 +41,6 @@
                     <div class="detail-line">
                         <span class="detail-label">Pincode:</span>
                         <input type="text" id="customerPincode" class="form-control detail-input">
-                    </div>
-                    <div class="detail-line">
-                        <span class="detail-label">Phone:</span>
-                        <input type="number" id="customerPhone" class="form-control detail-input"
-                            oninput="fetchCustomerDetails(this.value);">
                     </div>
                     <div class="detail-line">
                         <span class="detail-label">Date:</span>

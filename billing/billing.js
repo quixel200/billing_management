@@ -122,6 +122,7 @@ function fetchCustomerDetails(phone) {
   if (phone.length < 10) {
     $("#customerName").val("");
     $("#customerAddress").val("");
+    $("#customerPincode").val("");
     return;
   }
   populateBillsDropdown();
@@ -133,9 +134,11 @@ function fetchCustomerDetails(phone) {
       if (customer) {
         $("#customerName").val(customer.name || "");
         $("#customerAddress").val(customer.address || "");
+        $("#customerPincode").val(customer.pincode || "");
       } else {
         $("#customerName").val("");
         $("#customerAddress").val("");
+        $("#customerPincode").val("");
       }
     },
     error: function (err) {
@@ -221,6 +224,7 @@ function loadBillDetails(invoiceId) {
                             <input type="hidden" class="product_id" value="${detail.product_id}">
                         </tr>`;
         tableBody.append(row);
+        calculateTotal();
       });
     },
     error: function (err) {

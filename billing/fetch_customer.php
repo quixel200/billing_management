@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 if (isset($_GET['phone'])) {
     $phone = $_GET['phone'];
 
-    $stmt = $connection->prepare('SELECT name, address FROM customer WHERE mobile_number = ?');
+    $stmt = $connection->prepare('SELECT name, address, pincode FROM customer WHERE mobile_number = ?');
     $stmt->bind_param('s', $phone);
     $stmt->execute();
     $result = $stmt->get_result();

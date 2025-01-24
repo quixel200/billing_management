@@ -8,7 +8,7 @@ $query = "SELECT
     c.name AS category_name, 
     w.name AS warehouse_name, 
     p.product_id, 
-    p.name AS product_name, 
+    p.product_name, 
     p.quantity, 
     p.price 
 FROM 
