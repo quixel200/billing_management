@@ -139,6 +139,7 @@ function fetchCustomerDetails(phone) {
         $("#customerName").val("");
         $("#customerAddress").val("");
         $("#customerPincode").val("");
+        createCustomer(phone);
       }
     },
     error: function (err) {
@@ -146,6 +147,57 @@ function fetchCustomerDetails(phone) {
     },
   });
 }
+
+function createCustomer(phone) {
+  $.ajax({
+    url: "create_customer.php",
+    method: "POST",
+    data: { phone: phone },
+    success: function (response) {
+      console.log("Customer created successfully:", response);
+    },
+    error: function (err) {
+      console.error("Error creating customer:", err);
+    },
+  });
+}
+
+function saveOrUpdateCustomer(field, value) {
+  const phone = $("#customerPhone").val();
+  if (!phone) return; 
+
+  const data = {
+    phone: phone,
+    field: field,
+    value: value,
+  };
+
+  $.ajax({
+    url: "update_customer.php",
+    method: "POST",
+    data: data,
+    success: function (response) {
+      console.log("Customer data updated successfully:", response);
+    },
+    error: function (err) {
+      console.error("Error updating customer data:", err);
+    },
+  });
+}
+
+$(document).ready(function () {
+  $("#customerName").on("input", function () {
+    saveOrUpdateCustomer("name", $(this).val());
+  });
+
+  $("#customerAddress").on("input", function () {
+    saveOrUpdateCustomer("address", $(this).val());
+  });
+
+  $("#customerPincode").on("input", function () {
+    saveOrUpdateCustomer("pincode", $(this).val());
+  });
+});
 
 function populateBillsDropdown() {
   $.ajax({
