@@ -15,7 +15,7 @@ if (!$shop_id) {
 
 try {
     // Insert a new invoice
-    $query = "INSERT INTO invoice (customer_id, shop_id, sgst, cgst, grand_total, date) 
+    $query = "INSERT INTO invoice (customer_id, shop_id, sgst, cgst, grand_total, inv_date) 
               VALUES (?, ?, 0, 0, 0, NOW())";
     $stmt = $connection->prepare($query);
     $stmt->bind_param("ii", $customer_id, $shop_id);

@@ -6,7 +6,7 @@ require '../master/config.php'; // Include database connection
 $customerPhone = $_POST['customer_id'];
 $shopId = $_POST['shop_id'];
 
-$query = "SELECT invoice_id, DATE_FORMAT(date, '%Y-%m-%d') as date FROM invoice WHERE customer_id='$customerPhone' AND shop_id='$shopId' ORDER BY date DESC";
+$query = "SELECT invoice_id, DATE_FORMAT(inv_date, '%Y-%m-%d') as date FROM invoice WHERE customer_id='$customerPhone' AND shop_id='$shopId' ORDER BY date DESC";
 $result = $connection->query($query);
 
 if ($result->num_rows > 0) {
