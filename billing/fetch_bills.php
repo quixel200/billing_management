@@ -1,7 +1,7 @@
 <?php
-// fetch_bills.php
+
 header('Content-Type: application/json');
-require '../master/config.php'; // Include database connection
+require '../master/config.php';
 
 $customerPhone = $_POST['customer_id'];
 $shopId = $_POST['shop_id'];

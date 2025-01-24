@@ -1,23 +1,19 @@
 function adjustTextarea(textarea) {
-  textarea.style.height = ""; // Reset height
+  textarea.style.height = "";
   textarea.style.height =
-    Math.max(textarea.scrollHeight, textarea.clientHeight) + "px"; // Adjust to content
+    Math.max(textarea.scrollHeight, textarea.clientHeight) + "px";
 }
 
-// Adjust all dynamic textareas on window resize
 function adjustAllTextareas() {
   document.querySelectorAll("textarea").forEach(adjustTextarea);
 }
 
-// Attach input and resize listenersa
 window.addEventListener("resize", adjustAllTextareas);
 
-// Initialize on page load
 window.onload = function () {
   adjustAllTextareas();
 };
 
-// Event delegation for dynamic rows in the table
 document.getElementById("billingTable").addEventListener("input", function (e) {
   if (e.target && e.target.matches("textarea")) {
     adjustTextarea(e.target);
@@ -42,14 +38,7 @@ function calculateTotal() {
   $("#totalWithGST").text(totalWithGST.toFixed(2));
 }
 
-// Attach input event listeners to dynamically adjust column width
 $(document).on("input", ".quantity, .price", function () {
-  calculateTotal();
-});
-
-
-$(document).on("click", ".remove-row", function () {
-  $(this).closest("tr").remove();
   calculateTotal();
 });
 
@@ -103,19 +92,16 @@ $(document).on("input", ".item-search", function () {
 $(document).on("click", ".suggestion-item", function () {
   const item = $(this).text();
   const price = $(this).data("price");
-  const productId = $(this).data("product-id"); // Correct attribute name
-  const suggestionBox = $(this).closest(".suggestion-box"); // Find the suggestion-box container
-  const input = suggestionBox.find(".item-search"); // Find the textarea inside suggestion-box
+  const productId = $(this).data("product-id");
+  const suggestionBox = $(this).closest(".suggestion-box");
+  const input = suggestionBox.find(".item-search");
 
   input.val(item);
-  input.closest("tr").find(".price").val(price); // Set price in the corresponding input field
-  suggestionBox.find(".suggestions").empty(); // Clear the suggestions box
-  suggestionBox.find(".product_id").val(productId); // Set product_id in the hidden field
-  console.log("Product ID:", productId);
+  input.closest("tr").find(".price").val(price);
+  suggestionBox.find(".suggestions").empty();
+  suggestionBox.find(".product_id").val(productId);
   calculateTotal();
 });
-
-
 
 $("#downloadBill").click(function () {
   const billContent = document.body.innerHTML;
@@ -132,7 +118,6 @@ $("#printBill").click(function () {
   window.print();
 });
 
-//fetch customer details
 function fetchCustomerDetails(phone) {
   if (phone.length < 10) {
     $("#customerName").val("");
@@ -159,8 +144,6 @@ function fetchCustomerDetails(phone) {
   });
 }
 
-//Bill details - dropdown
-
 function populateBillsDropdown() {
   $.ajax({
     url: "fetch_bills.php",
@@ -183,12 +166,11 @@ function populateBillsDropdown() {
   });
 }
 
-// Load bill details for the selected bill
 function loadBillDetails(invoiceId) {
   if (invoiceId === "new") {
     if ($("#customerPhone").val().trim() === "") {
-        alert("Please enter a customer phone number."); // Show error box
-        return; // Exit the function if no phone number is entered
+        alert("Please enter a customer phone number.");
+        return;
     }
     else {
         $.ajax({
@@ -201,14 +183,12 @@ function loadBillDetails(invoiceId) {
           success: function (response) {
             if (response.success) {
               const newInvoiceId = response.invoice_id;
-              // Set the new invoice ID as selected
               $("#billSelector")
                 .append(
                   `<option value="${newInvoiceId}" selected>Bill #${newInvoiceId} - New</option>`
                 )
                 .val(newInvoiceId);
     
-              // Clear the table for the new bill
               $("#billingTable").empty();
             } else {
               console.error("Failed to create a new invoice:", response.error);
@@ -222,14 +202,13 @@ function loadBillDetails(invoiceId) {
     return;
   }
 
-
   $.ajax({
-    url: "fetch_bill_details.php", // Server-side script to fetch bill details
+    url: "fetch_bill_details.php",
     method: "GET",
     data: { invoice_id: invoiceId },
     success: function (details) {
       const tableBody = $("#billingTable");
-      tableBody.empty(); // Clear existing rows
+      tableBody.empty();
 
       details.forEach(function (detail) {
         const row = `
@@ -250,13 +229,11 @@ function loadBillDetails(invoiceId) {
   });
 }
 
-// Handle dropdown change
 $("#billSelector").on("change", function () {
   const selectedInvoiceId = $(this).val();
   loadBillDetails(selectedInvoiceId);
 });
 
-// Initialize on page load
 populateBillsDropdown();
 
 function addRowToDatabase(data, rowElement) {
@@ -266,7 +243,6 @@ function addRowToDatabase(data, rowElement) {
     data: data,
     success: function (response) {
       if (response.success) {
-        // Store the new item_id in the row for future updates
         rowElement.data("item_id", response.item_id);
         console.log("Row added successfully:", response);
       } else {
@@ -279,40 +255,31 @@ function addRowToDatabase(data, rowElement) {
   });
 }
 
-// Event listener for losing focus on the item field
-$(document).on("blur", ".item-search", function () {
+$(document).on("blur", ".quantity", function () {
   const row = $(this).closest("tr");
-  const productId = row.find(".product_id").val(); // Get product_id from hidden field
-  console.log(productId);
+  const productId = row.find(".product_id").val();
   const quantity = parseFloat(row.find(".quantity").val()) || 0;
   const unitPrice = parseFloat(row.find(".price").val()) || 0;
-  const totalPrice = quantity * unitPrice;
-  const invoiceId = $("#billSelector").val(); // Get the selected invoice ID
+  const invoiceId = $("#billSelector").val();
 
-  // Only proceed if the item name is not empty and a valid invoice ID exists
   if (invoiceId && invoiceId !== "new") {
     const rowData = {
       invoice_id: invoiceId,
-      product_id: productId, // Include product_id
+      product_id: productId,
       quantity: quantity,
-      unit_price: unitPrice,
-      total_price: totalPrice,
+      unit_price: unitPrice
     };
 
-    // Add the row to the database
     addRowToDatabase(rowData, row);
   }
 });
 
-
-
-// Function to remove a row from the database
-function removeRowFromDatabase(itemId) {
-  if (!itemId) return; // Skip if no item_id is associated
+function removeRowFromDatabase(productId, invoiceId) {
+  if (!productId) return;
   $.ajax({
-    url: "database_row_remove.php",
+    url: "database_row_delete.php",
     method: "POST",
-    data: { item_id: itemId },
+    data: { product_id: productId, invoice_id: invoiceId },
     success: function (response) {
       if (response.success) {
         console.log("Row removed successfully:", response);
@@ -337,7 +304,7 @@ $("#addRow").click(function () {
     <tr>
       <td class="suggestion-box">
         <textarea class="form-control item-search" placeholder="Search product" rows="1"></textarea>
-        <input type="hidden" class="product_id" value=""> <!-- Hidden product_id field -->
+        <input type="hidden" class="product_id" value="">
         <div class="suggestions"></div>
       </td>
       <td><input type="number" class="form-control quantity"></td>
@@ -348,20 +315,17 @@ $("#addRow").click(function () {
   $("#billingTable").append(newRow);
 });
 
-
-// Remove row event
 $(document).on("click", ".remove-row", function () {
   const row = $(this).closest("tr");
-  const itemId = row.data("item_id"); // Fetch the associated item_id
-  removeRowFromDatabase(itemId);
+  const productId = row.find(".product_id").val();
+  const invoiceId = $("#billSelector").val();
+  removeRowFromDatabase(productId, invoiceId);
   row.remove();
   calculateTotal();
 });
 
-
-// Function to update a row in the database
 function updateRowInDatabase(itemId, updatedData) {
-  if (!itemId) return; // Skip if no item_id is associated
+  if (!itemId) return;
   $.ajax({
     url: "database_row_update.php",
     method: "POST",
@@ -369,7 +333,6 @@ function updateRowInDatabase(itemId, updatedData) {
       item_id: itemId,
       quantity: updatedData.quantity,
       unit_price: updatedData.unit_price,
-      total_price: updatedData.total_price,
     },
     success: function (response) {
       if (response.success) {
@@ -384,20 +347,13 @@ function updateRowInDatabase(itemId, updatedData) {
   });
 }
 
-// Event listener for changes in quantity or price
-$(document).on("input", ".quantity, .price", function () {
+$(document).on("change", ".quantity, .price", function () {
   const row = $(this).closest("tr");
-  const itemId = row.data("item_id"); // Fetch the associated item_id
+  const itemId = row.find(".product_id").val();
   const quantity = parseFloat(row.find(".quantity").val()) || 0;
   const unit_price = parseFloat(row.find(".price").val()) || 0;
-  const total_price = quantity * unit_price;
 
-  // Update total price in the UI
-  row.find(".amount").text(total_price.toFixed(2));
+  updateRowInDatabase(itemId, { quantity, unit_price});
 
-  // Update database
-  updateRowInDatabase(itemId, { quantity, unit_price, total_price });
-
-  // Recalculate totals
   calculateTotal();
 });

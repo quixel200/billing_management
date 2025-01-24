@@ -100,7 +100,6 @@ textarea.detail-input {
     transition: height 0.1s ease;
 }
 
-/* Ensure proper textarea behavior in table */
 .table textarea.form-control {
     min-height: 38px;
     width: 100%;
@@ -109,8 +108,6 @@ textarea.detail-input {
     transition: height 0.1s ease;
 }
 
-
-/* Print Styles */
 @media print {
     @page {
         size: A4;
@@ -136,7 +133,6 @@ textarea.detail-input {
         page-break-inside: avoid !important;
     }
 
-    /* Hide action column and related elements */
     .table th:last-child,
     .table td:last-child,
     .suggestions,
@@ -147,7 +143,6 @@ textarea.detail-input {
         display: none !important;
     }
 
-    /* Adjust table layout after hiding action column */
     .table th:nth-child(1) {
         width: 50% !important;
     }
@@ -194,31 +189,26 @@ textarea.detail-input {
         page-break-inside: avoid !important;
     }
 
-    /* Ensure important content starts on a new page if needed */
     .card-body {
         page-break-inside: avoid !important;
     }
 
-    /* Improve header visibility */
     h2,
     h4 {
         margin: 10px 0 !important;
         color: black !important;
     }
 
-    /* Remove unnecessary spacing */
     .form-section {
         padding: 10px 0 !important;
     }
 
-    /* Force show background colors */
     .amount-box {
         background-color: #f8f9fa !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* Ensure proper text contrast */
     * {
         color: black !important;
     }

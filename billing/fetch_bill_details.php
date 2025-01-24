@@ -1,12 +1,12 @@
 <?php
-// fetch_bill_details.php
+
 header('Content-Type: application/json');
-require '../master/config.php'; // Include database connection
+require '../master/config.php'; 
 
 if (isset($_GET['invoice_id'])) {
     $invoiceId = $_GET['invoice_id'];
 
-    $query = "SELECT id.product_id, id.quantity, id.unit_price, id.total_price, p.name AS product_name 
+    $query = "SELECT id.product_id, id.quantity, id.unit_price 
               FROM invoice_details id 
               JOIN products p ON id.product_id = p.product_id
               WHERE id.invoice_id = ?";

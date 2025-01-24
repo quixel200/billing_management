@@ -2,17 +2,13 @@
 header('Content-Type: application/json');
 require '../master/config.php';
 
-$item_id = $_POST['item_id'] ?? null;
-
-if (!$item_id) {
-    echo json_encode(['success' => false, 'error' => 'Missing item ID.']);
-    exit;
-}
+$product_id = $_POST['product_id'] ?? null;
+$invoice_id = $_POST['invoice_id'] ?? null;
 
 try {
-    $query = "DELETE FROM invoice_details WHERE item_id = ?";
+    $query = "DELETE FROM invoice_details WHERE product_id = ? AND invoice_id = ?";
     $stmt = $connection->prepare($query);
-    $stmt->bind_param("i", $item_id);
+    $stmt->bind_param("ii", $product_id, $invoice_id);
     $stmt->execute();
 
     echo json_encode(['success' => true]);
