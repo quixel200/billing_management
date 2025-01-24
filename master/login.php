@@ -7,9 +7,10 @@ if($stmt = $connection->prepare('select * from users where employee_code=? and p
     $stmt->execute();
     $stmt->store_result();
     if($stmt->num_rows == 1){
-        echo "login successful";
+        header("Location: ../database_management/dashboard.php");
+        die();
     }else{
-        echo "username/password incorrect";
+        echo "<script>alert('username/password incorrect');header.location.href='index.php'</script>";
     }
 }
 ?>

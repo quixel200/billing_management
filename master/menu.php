@@ -19,13 +19,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item mx-1">
-                            <a class="nav-link active rounded px-3" href="#">Dashboard</a>
+                            <a class="nav-link active rounded px-3" href="../database_management/dashboard.php">Dashboard</a>
                         </li>
                         <li class="nav-item mx-1">
-                            <a class="nav-link rounded px-3" href="#">Stock Management</a>
+                            <a class="nav-link rounded px-3" href="../warehouse_stock/warehouse.php">Stock Management</a>
                         </li>
                         <li class="nav-item mx-1">
-                            <a class="nav-link rounded px-3" href="#">Sales and Billing</a>
+                            <a class="nav-link rounded px-3" href="../billing/billing.php">Sales and Billing</a>
                         </li>
                         <li class="nav-item dropdown mx-1">
                             <a class="nav-link dropdown-toggle rounded px-3" href="#" id="navbarDropdown" role="button"
